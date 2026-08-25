@@ -23,6 +23,7 @@ e gestão de equipe.
   em modo desenvolvimento e só imprime no console)
 - Lembretes de consulta via **WhatsApp Cloud API** (opcional, mesmo esquema)
 - Geração de recibo em **PDF** (`@react-pdf/renderer`)
+- Upload de arquivos (radiografias, fotos, documentos) via **Vercel Blob**
 
 ## Como rodar localmente
 
@@ -65,4 +66,24 @@ passo de cada uma quando for para produção.
 - **Appointment** — consulta agendada, vinculada a paciente, dentista
   responsável e procedimento
 - **FinancialEntry** / **RecurringCharge** — financeiro do paciente
+- **PatientDocument** — arquivos anexados ao paciente (radiografias, fotos,
+  documentos), armazenados no Vercel Blob
 - **User** — usuários do sistema (Admin/Dentista), com CRO e especialidade
+
+## Retorno automático (recall)
+
+Pacientes sem consulta "Realizada" há mais de `RECALL_INTERVAL_MONTHS` (padrão:
+6 meses) e sem nenhuma consulta futura já agendada aparecem no widget
+"Pacientes para Retorno" do dashboard, com botão para enviar um lembrete de
+WhatsApp manualmente. O cron `/api/cron/recall` (agendado 1x por semana no
+`vercel.json`) faz o mesmo envio automaticamente, respeitando um intervalo
+mínimo de 30 dias entre lembretes para o mesmo paciente.
+
+## Upload de arquivos
+
+A aba "Arquivos" no prontuário do paciente permite enviar radiografias, fotos
+e documentos (até 4MB por arquivo — limite do corpo de requisição de funções
+serverless da Vercel). Requer um Vercel Blob Store conectado ao projeto
+(painel da Vercel → Storage → Create Database → Blob, que gera a variável
+`BLOB_READ_WRITE_TOKEN` automaticamente). Sem essa variável configurada, a
+aba continua visível mas o upload retorna um aviso pedindo a configuração.

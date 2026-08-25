@@ -163,8 +163,29 @@ async function main() {
     },
   });
 
+  // Consulta antiga "Realizada" — sem nenhuma consulta futura
+  // agendada depois dela, esse paciente aparece no widget de
+  // "Pacientes para Retorno" do dashboard (mais de 6 meses sem vir).
+  const eightMonthsAgo = new Date();
+  eightMonthsAgo.setMonth(eightMonthsAgo.getMonth() - 8);
+
+  await prisma.appointment.upsert({
+    where: { id: "appt_0001" },
+    update: {},
+    create: {
+      id: "appt_0001",
+      patientId: "cms0t7io30000vkswdbvz1csr",
+      professionalId: "usr_bc27cdefdd254d6daa0c",
+      procedureId: "proc_limpeza",
+      date: eightMonthsAgo,
+      duration: 40,
+      status: "Realizada",
+      notes: "Profilaxia de rotina.",
+    },
+  });
+
   console.log(
-    "Seed concluído: 4 pacientes, 1 anamnese, 1 evolução, 8 procedimentos, 1 plano de tratamento, 1 usuário admin."
+    "Seed concluído: 4 pacientes, 1 anamnese, 1 evolução, 8 procedimentos, 1 plano de tratamento, 1 consulta, 1 usuário admin."
   );
 }
 

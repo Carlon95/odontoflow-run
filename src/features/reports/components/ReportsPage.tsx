@@ -148,7 +148,7 @@ export default function ReportsPage() {
             />
 
             <StatCard
-              title="Sessões Realizadas"
+              title="Consultas Realizadas"
               value={String(
                 data.operational
                   .appointmentsByStatus

@@ -1,5 +1,26 @@
 # Changelog
 
+# Changelog
+
+## Novas funcionalidades — arquivos e retorno automático
+
+- **Upload de arquivos do paciente** (`PatientDocument`): nova aba "Arquivos"
+  no prontuário, com upload de radiografias/fotos/documentos via Vercel Blob
+  (`@vercel/blob`), preview de imagem, download e exclusão. Limite de 4MB por
+  arquivo (corpo de requisição de função serverless). Sem `BLOB_READ_WRITE_TOKEN`
+  configurado, a aba avisa em vez de falhar silenciosamente.
+- **Retorno/recall automático**: novo campo `Patient.lastRecallSentAt` +
+  `recallService.ts` identifica pacientes sem consulta "Realizada" há mais de
+  `RECALL_INTERVAL_MONTHS` (padrão 6) sem retorno já agendado. Widget
+  "Pacientes para Retorno" no dashboard com envio manual por paciente, e cron
+  semanal (`/api/cron/recall`, novo no `vercel.json`) para envio automático via
+  WhatsApp — reaproveita a infraestrutura de mensagens já existente
+  (`Message.type = "LembreteRetorno"`).
+- Migration `20260825000000_documents_and_recall` cobre as duas mudanças de
+  schema acima.
+- Corrigido mais um "Sessões Realizadas" → "Consultas Realizadas" em
+  Relatórios, que tinha escapado da varredura de terminologia anterior.
+
 ## Correção pós-deploy — erros de type-check reais
 
 Bugs reais encontrados no primeiro build na Vercel (o Prisma Client de verdade,

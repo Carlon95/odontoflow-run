@@ -3,6 +3,7 @@
 import {
   MessageCircle,
   CalendarClock,
+  RotateCcw,
 } from "lucide-react";
 
 import {
@@ -65,6 +66,8 @@ export default function MessageList({
             {message.type ===
             "LembreteConsulta" ? (
               <CalendarClock className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            ) : message.type === "LembreteRetorno" ? (
+              <RotateCcw className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
             ) : (
               <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
             )}
@@ -75,9 +78,10 @@ export default function MessageList({
               </p>
 
               <p className="mt-1 text-xs text-muted-foreground">
-                {message.type ===
-                "LembreteConsulta"
+                {message.type === "LembreteConsulta"
                   ? "Lembrete automático"
+                  : message.type === "LembreteRetorno"
+                  ? "Lembrete de retorno"
                   : "Mensagem manual"}
                 {" · "}
                 {formatDateTime(

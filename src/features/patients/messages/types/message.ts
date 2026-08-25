@@ -1,6 +1,7 @@
 export type MessageType =
   | "Livre"
-  | "LembreteConsulta";
+  | "LembreteConsulta"
+  | "LembreteRetorno";
 
 export type MessageStatus =
   | "Enviado"

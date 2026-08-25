@@ -1,6 +1,7 @@
 import { getPatients, getPatientCount, getPatientsWithoutAnamnesisCount } from "@/src/features/patients/services/server/patientService";
 import { getUpcomingAppointments } from "@/src/features/patients/agenda/services/server/appointmentService";
 import { getAllPendingFinancialEntries } from "@/src/features/patients/financial/services/server/financialEntryService";
+import { getPatientsDueForRecall } from "@/src/features/recall/services/server/recallService";
 
 function isSameDay(a: Date, b: Date) {
   return (
@@ -17,12 +18,14 @@ export async function getDashboardData() {
     recentPatients,
     upcomingAppointments,
     pendingFinancialEntries,
+    patientsDueForRecall,
   ] = await Promise.all([
     getPatientCount(),
     getPatientsWithoutAnamnesisCount(),
     getPatients(),
     getUpcomingAppointments(),
     getAllPendingFinancialEntries(),
+    getPatientsDueForRecall(),
   ]);
 
   const today = new Date();
@@ -53,5 +56,7 @@ export async function getDashboardData() {
     pendingFinancialEntries: pendingFinancialEntries.slice(0, 5),
     pendingTotal,
     overdueCount,
+    patientsDueForRecall: patientsDueForRecall.slice(0, 5),
+    patientsDueForRecallCount: patientsDueForRecall.length,
   };
 }

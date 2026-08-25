@@ -18,6 +18,7 @@ import AppointmentList from "@/src/features/dashboard/components/AppointmentList
 import FinancialSummary from "@/src/features/dashboard/components/FinancialSummary";
 import TaskList from "@/src/features/dashboard/components/TaskList";
 import RecentPatients from "@/src/features/dashboard/components/RecentPatients";
+import RecallWidget from "@/src/features/dashboard/components/RecallWidget";
 
 function formatCurrency(value: number) {
   return value.toLocaleString("pt-BR", {
@@ -128,6 +129,13 @@ export default async function Home() {
 
             <RecentPatients
               patients={dashboard.recentPatients}
+            />
+
+            <RecallWidget
+              patients={dashboard.patientsDueForRecall}
+              totalCount={
+                dashboard.patientsDueForRecallCount
+              }
             />
           </div>
 

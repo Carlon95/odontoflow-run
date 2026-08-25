@@ -34,6 +34,9 @@ model Patient {
   recurringCharges RecurringCharge[]
   appointments     Appointment[]
   messages         Message[]
+  documents        PatientDocument[]
+
+  lastRecallSentAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -234,6 +237,27 @@ model Message {
   createdAt DateTime @default(now())
 }
 
+model PatientDocument {
+  id String @id @default(cuid())
+
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  name     String // nome de exibição (ex: "Radiografia panorâmica")
+  category String @default("Documento") // Radiografia | Foto | Exame | Documento
+
+  url      String // URL pública do arquivo no Vercel Blob
+  blobPath String // pathname no blob — usado para excluir o arquivo depois
+  mimeType String
+  size     Int // bytes
+
+  uploadedById String?
+  uploadedBy   User? @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+}
+
 model User {
   id String @id @default(cuid())
 
@@ -246,6 +270,7 @@ model User {
   specialty String? // especialidade odontológica (ex: Ortodontia, Endodontia, Implantodontia)
 
   appointments Appointment[]
+  uploadedDocuments PatientDocument[]
 
   failedLoginAttempts Int       @default(0)
   lockedUntil         DateTime?

@@ -15,6 +15,7 @@ import FinanceTab from "./tabs/FinanceTab";
 
 import EvolutionsTab from "../evolutions/components/EvolutionsTab";
 import MessagesTab from "../messages/components/MessagesTab";
+import DocumentsTab from "../documents/components/DocumentsTab";
 
 import { Patient } from "../types/patient";
 import { Anamnesis } from "../anamnese/types/anamnesis";
@@ -43,7 +44,7 @@ export default function PatientTabs({
       className="space-y-6"
     >
       <div className="-mx-1 overflow-x-auto px-1 pb-1">
-        <TabsList className="flex w-max min-w-full gap-1 sm:grid sm:grid-cols-7">
+        <TabsList className="flex w-max min-w-full gap-1 sm:grid sm:grid-cols-8">
           <TabsTrigger value="summary">
             Resumo
           </TabsTrigger>
@@ -62,6 +63,10 @@ export default function PatientTabs({
 
           <TabsTrigger value="progress">
             Evoluções
+          </TabsTrigger>
+
+          <TabsTrigger value="documents">
+            Arquivos
           </TabsTrigger>
 
           <TabsTrigger value="finance">
@@ -98,6 +103,10 @@ export default function PatientTabs({
 
       <TabsContent value="progress">
         <EvolutionsTab patientId={patient.id} />
+      </TabsContent>
+
+      <TabsContent value="documents">
+        <DocumentsTab patientId={patient.id} />
       </TabsContent>
 
       <TabsContent value="finance">
