@@ -1,5 +1,27 @@
 # Changelog
 
+## Correção pós-deploy — erros de type-check reais
+
+Bugs reais encontrados no primeiro build na Vercel (o Prisma Client de verdade,
+gerado lá, expôs incompatibilidades que o ambiente de desenvolvimento local não
+pegava):
+
+- `prisma.config.ts`: parou de travar `prisma generate` quando `DATABASE_URL`
+  ainda não está visível (ex: no passo de instalação de dependências, antes das
+  env vars da build) — comandos que realmente precisam do banco continuam
+  falhando normalmente se a URL estiver errada.
+- `src/app/patients/[id]/page.tsx`: o mapeamento manual da Anamnese ainda
+  usava os campos antigos de terapia (`historyOfPresentIllness`,
+  `familyHistory`, `surgeries`, `lifestyle`) — atualizado para os campos
+  odontológicos atuais, com a conversão correta de `lastDentalVisit` para
+  string ISO. O mapeamento de `appointments` também passou a incluir
+  `professionalId`/`procedureId`/`professional`/`procedure`, que faltavam.
+- `patientRepository.ts`: a tipagem manual do `findAll()` não incluía
+  `receiveReminders` (obrigatório no tipo `Patient`), causando erro de build.
+- Auditoria completa em todos os repositories e páginas do app procurando o
+  mesmo padrão de risco (anotação de tipo manual + spread de dados vindos do
+  Prisma) — nenhuma outra ocorrência encontrada.
+
 ## Refinamento visual — mais elegante
 
 - **Sombras**: substituída a `shadow-sm` padrão por `.shadow-elegant`, uma sombra

@@ -20,9 +20,11 @@ export async function findAll(): Promise<Patient[]> {
       birthDate: Date;
       gender: string;
       status: string;
+      phone: string | null;
       email: string | null;
       cpf: string | null;
       insurancePlan: string | null;
+      receiveReminders: boolean;
       createdAt: Date;
       updatedAt: Date;
     }) => ({

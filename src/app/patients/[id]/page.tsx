@@ -43,13 +43,16 @@ export default async function PatientPage({
     ? {
         ...anamnesisResponse,
         chiefComplaint: anamnesisResponse.chiefComplaint ?? undefined,
-        historyOfPresentIllness: anamnesisResponse.historyOfPresentIllness ?? undefined,
-        familyHistory: anamnesisResponse.familyHistory ?? undefined,
+        medicalConditions: anamnesisResponse.medicalConditions ?? undefined,
         medications: anamnesisResponse.medications ?? undefined,
         allergies: anamnesisResponse.allergies ?? undefined,
-        surgeries: anamnesisResponse.surgeries ?? undefined,
-        lifestyle: anamnesisResponse.lifestyle ?? undefined,
+        previousSurgeries: anamnesisResponse.previousSurgeries ?? undefined,
+        dentalHistory: anamnesisResponse.dentalHistory ?? undefined,
+        oralHygieneHabits: anamnesisResponse.oralHygieneHabits ?? undefined,
         observations: anamnesisResponse.observations ?? undefined,
+        lastDentalVisit: anamnesisResponse.lastDentalVisit
+          ? anamnesisResponse.lastDentalVisit.toISOString()
+          : null,
       }
     : null;
 
@@ -136,12 +139,16 @@ export default async function PatientPage({
     (appointment: {
       id: string;
       patientId: string;
+      professionalId: string | null;
+      procedureId: string | null;
       date: Date;
       duration: number;
       status: string;
       notes: string | null;
       createdAt: Date;
       updatedAt: Date;
+      professional: { id: string; name: string } | null;
+      procedure: { id: string; name: string } | null;
     }) => ({
       ...appointment,
       status: appointment.status as
