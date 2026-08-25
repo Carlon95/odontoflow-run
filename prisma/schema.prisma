@@ -1,0 +1,258 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+
+  // Alguns provedores (Neon, Supabase) usam uma URL "pooled" para a
+  // aplicação e uma URL direta (sem pooler) para migrations. Se o seu
+  // provedor exigir isso, descomente a linha abaixo e defina DIRECT_URL
+  // no .env com a connection string direta.
+  directUrl = env("DIRECT_URL")
+}
+
+model Patient {
+  id        String   @id @default(cuid())
+  name      String
+  birthDate DateTime
+  gender    String
+  status    String
+
+  phone            String?
+  email            String?
+  cpf              String?
+  insurancePlan    String? // convênio odontológico (ex: Odontoprev, Amil Dental) — vazio = particular
+  receiveReminders Boolean @default(true)
+
+  anamnesis        Anamnesis?
+  evolutions       Evolution[]
+  assessments      Assessment[]
+  treatmentPlan    TreatmentPlan?
+  financialEntries FinancialEntry[]
+  recurringCharges RecurringCharge[]
+  appointments     Appointment[]
+  messages         Message[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Anamnesis {
+  id String @id @default(cuid())
+
+  patientId String @unique
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  chiefComplaint    String? // queixa principal / motivo da consulta
+  medicalConditions String? // condições sistêmicas: diabetes, hipertensão, cardiopatias, etc.
+  medications       String? // medicamentos em uso
+  allergies         String? // alergias a medicamentos, anestésicos, látex, etc.
+  previousSurgeries String?
+
+  isPregnant Boolean?
+  isSmoker   Boolean?
+  hasBruxism Boolean?
+
+  lastDentalVisit   DateTime?
+  dentalHistory     String? // tratamentos odontológicos anteriores
+  oralHygieneHabits String? // frequência de escovação, uso de fio dental, etc.
+
+  observations String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Evolution {
+  id String @id @default(cuid())
+
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  sessionDate DateTime @default(now())
+
+  content String
+
+  nextSession DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Assessment {
+  id String @id @default(cuid())
+
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  date DateTime @default(now())
+
+  type        String
+  description String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TreatmentPlan {
+  id String @id @default(cuid())
+
+  patientId String @unique
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  generalNotes String?
+
+  items TreatmentPlanItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TreatmentPlanItem {
+  id String @id @default(cuid())
+
+  treatmentPlanId String
+
+  treatmentPlan TreatmentPlan @relation(fields: [treatmentPlanId], references: [id], onDelete: Cascade)
+
+  procedureId String?
+  procedure   Procedure? @relation(fields: [procedureId], references: [id], onDelete: SetNull)
+
+  // Notação FDI (ex: "16", "26", "36", "48"). Vazio = procedimento
+  // que não se refere a um dente específico (ex: raspagem geral).
+  toothNumber String?
+  toothFace   String? // faces do dente, ex: "O", "M,D"
+
+  description   String // nome do procedimento (copiado do catálogo ou digitado manualmente)
+  status        String @default("Planejado") // Planejado | Em Andamento | Concluído | Cancelado
+  estimatedCost Float?
+  notes         String?
+  order         Int    @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Procedure {
+  id String @id @default(cuid())
+
+  name                   String
+  category               String? // Preventivo, Restaurador, Endodontia, Cirurgia, Estética, Ortodontia, Prótese...
+  defaultPrice           Float?
+  defaultDurationMinutes Int?
+  active                 Boolean @default(true)
+
+  treatmentPlanItems TreatmentPlanItem[]
+  appointments       Appointment[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FinancialEntry {
+  id String @id @default(cuid())
+
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  date        DateTime @default(now()) // vencimento
+  description String
+  amount      Float
+  status      String    @default("Pendente") // só "Pago" ou "Pendente" — "Atrasado" é calculado, não armazenado
+  method      String?
+  paidAt      DateTime?
+
+  recurringChargeId String?
+  recurringCharge   RecurringCharge? @relation(fields: [recurringChargeId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RecurringCharge {
+  id String @id @default(cuid())
+
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  description String
+  amount      Float
+  dayOfMonth  Int
+  active      Boolean @default(true)
+
+  entries FinancialEntry[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Appointment {
+  id String @id @default(cuid())
+
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  professionalId String?
+  professional   User? @relation(fields: [professionalId], references: [id], onDelete: SetNull)
+
+  procedureId String?
+  procedure   Procedure? @relation(fields: [procedureId], references: [id], onDelete: SetNull)
+
+  date     DateTime
+  duration Int      @default(30)
+  status   String   @default("Agendada")
+  notes    String?
+
+  reminderSentAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Message {
+  id String @id @default(cuid())
+
+  patientId String
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  type    String @default("Livre") // Livre | LembreteConsulta
+  content String
+  status  String @default("Enviado") // Enviado | Falhou
+
+  errorMessage String?
+
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id String @id @default(cuid())
+
+  name         String
+  email        String @unique
+  passwordHash String
+  role         String @default("Dentista") // Admin | Dentista | Recepcao
+
+  croNumber String? // registro no Conselho Regional de Odontologia (CRO)
+  specialty String? // especialidade odontológica (ex: Ortodontia, Endodontia, Implantodontia)
+
+  appointments Appointment[]
+
+  failedLoginAttempts Int       @default(0)
+  lockedUntil         DateTime?
+
+  resetTokenHash      String?
+  resetTokenExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

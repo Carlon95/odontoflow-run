@@ -1,0 +1,190 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-jakarta);
+  --color-brand-navy: var(--brand-navy);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-navy-deep: var(--brand-navy-deep);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Identidade OdontoFlow — extraída dos arquivos de marca. */
+  --brand-navy: oklch(0.297 0.127 263.442); /* #08256B — texto/marca escura */
+  --brand-navy-deep: oklch(0.247 0.071 262.092); /* #0D1F42 — fundo navy (sidebar) */
+  --brand-blue: oklch(0.449 0.196 261.386); /* #0248BF — azul primário do gradiente */
+  --brand-cyan: oklch(0.79 0.142 219.165); /* #0DCFF8 — ciano de destaque */
+
+  --background: oklch(0.99 0.002 247);
+  --foreground: oklch(0.24 0.03 263);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.03 263);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.03 263);
+  --primary: var(--brand-blue);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0.006 260);
+  --secondary-foreground: var(--brand-navy);
+  --muted: oklch(0.97 0.006 260);
+  --muted-foreground: oklch(0.5 0.03 262);
+  --accent: oklch(0.95 0.025 255);
+  --accent-foreground: var(--brand-navy);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.93 0.006 262);
+  --input: oklch(0.93 0.006 262);
+  --ring: oklch(0.449 0.196 261.386 / 40%);
+  --chart-1: var(--brand-navy);
+  --chart-2: var(--brand-blue);
+  --chart-3: oklch(0.58 0.17 249);
+  --chart-4: oklch(0.7 0.15 235);
+  --chart-5: var(--brand-cyan);
+  --radius: 0.75rem;
+  --sidebar: var(--brand-navy-deep);
+  --sidebar-foreground: oklch(0.96 0.01 255);
+  --sidebar-primary: var(--brand-cyan);
+  --sidebar-primary-foreground: var(--brand-navy-deep);
+  --sidebar-accent: oklch(0.33 0.08 262);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.79 0.142 219.165 / 45%);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.65 0.19 261.386);
+  --primary-foreground: oklch(0.145 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* ==============================
+   Toques de identidade OdontoFlow
+   ============================== */
+
+/* Glow ambiente muito sutil nas cores da marca, usado atrás de
+   heros/cards de destaque — evita o fundo cinza-chapado típico de
+   painel SaaS genérico sem apelar para um gradiente óbvio. Discreto
+   o bastante para ser sentido, não notado. */
+.bg-ambient-glow {
+  background-image:
+    radial-gradient(560px circle at 8% -15%, oklch(0.79 0.09 219 / 10%), transparent 60%),
+    radial-gradient(480px circle at 105% -10%, oklch(0.55 0.14 261 / 8%), transparent 55%);
+}
+
+/* Sombra suave e difusa, tingida de navy em vez de preto puro —
+   substitui o shadow-sm padrão do Tailwind nos cards de destaque
+   para um acabamento mais refinado, menos "cartão recortado". */
+.shadow-elegant {
+  box-shadow:
+    0 1px 2px oklch(0.24 0.03 263 / 4%),
+    0 8px 24px -12px oklch(0.24 0.03 263 / 12%);
+}
+
+.shadow-elegant-hover {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.shadow-elegant-hover:hover {
+  box-shadow:
+    0 2px 4px oklch(0.24 0.03 263 / 5%),
+    0 16px 32px -14px oklch(0.24 0.03 263 / 18%);
+}
+
+/* Linha "conectada" que ecoa o traço do ícone da marca (dois nós
+   ligados por uma linha, sugerindo fluxo/dados). Usada como detalhe
+   decorativo pontual, nunca como padrão repetido. */
+@media (prefers-reduced-motion: no-preference) {
+  .flow-dash {
+    stroke-dasharray: 3 7;
+    animation: flow-dash-move 7s linear infinite;
+  }
+}
+
+@keyframes flow-dash-move {
+  to {
+    stroke-dashoffset: -60;
+  }
+}
+
